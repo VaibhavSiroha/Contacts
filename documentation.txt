@@ -1,0 +1,93 @@
+# Contact Web App - Development Documentation
+
+## Overview
+
+This document outlines the requirements, validation rules, and expected behavior for the Contact Web App. The goal is to ensure all team members are aligned on the development process.
+
+---
+
+## **Tech Stack**
+
+- **Backend:** Flask (Python) with Flask-PyMongo
+- **Database:** MongoDB
+- **Frontend:** HTML, CSS, JavaScript (with real-time validation)
+- **UI Framework (Optional):** Bootstrap or React
+
+---
+
+## **Database Schema**
+
+Each contact will be stored with the following fields:
+
+```json
+{
+  "name": "John Doe",
+  "prefix": "+91", // Only if manually selected
+  "phone": "9876543210", // Must be exactly 10 digits
+  "email": "john.doe@example.com",
+  "address": "123 Street, City, Country"
+}
+```
+
+---
+
+## **Frontend Requirements**
+
+### **Phone Number Input**
+
+✅ **Two input fields:**
+
+- **Small Prefix Box (Dropdown)**: Defaults to `+91`, but not auto-applied.
+- **Large Phone Number Box:** Accepts only 10-digit numbers.
+
+✅ **Real-time Validation:**
+
+- Ensures exactly **10 digits** in the phone number field.
+- Blocks **letters and special characters** (except `+` in prefix).
+- Prevents users from entering `+91` or `0` manually in the phone number field.
+- Shows an error if an invalid format is entered.
+
+✅ **Fixed Prefix List:**
+
+- Users must select from a predefined list (`+91`, `+1`, `+44`, etc.).
+- Manual entry in the prefix field is disabled.
+
+✅ **Automatic Formatting:**
+
+- Changes format dynamically based on the selected prefix (e.g., `+91 98765 43210` or `+1 987-654-3210`).
+
+---
+
+## **Backend Validation & Data Handling**
+
+✅ **Phone Number Processing:**
+
+- If the user selects a prefix, store it separately.
+- Ensure the phone number is always stored as exactly **10 digits**.
+- Remove spaces before saving (`+91 98765 43210` → `+91 9876543210`).
+
+✅ **Edge Case Handling:**
+
+- Reject phone numbers shorter/longer than 10 digits.
+- Prevent duplicate entries (check if a contact with the same prefix + phone exists).
+- Allow users to save a number without a prefix if they don’t select one.
+- Keep leading zero (`0987654321` is stored as entered).
+
+---
+
+## **Future Considerations**
+
+- Option to display **flag icons** next to country codes.
+- User authentication for secure contact management.
+- REST API for integration with other platforms.
+
+---
+
+## **Next Steps**
+
+- Implement the **frontend validation** logic.
+- Develop the **backend API** to handle CRUD operations.
+- Connect the application to **MongoDB** and enforce validation rules.
+
+This document ensures all developers are on the same page. Let me know if you need changes before sharing it with your team! 🚀
+

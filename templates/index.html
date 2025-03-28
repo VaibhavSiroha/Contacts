@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4 sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-address-book me-2"></i>Contact Manager</h3>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <form action="{{ url_for('search_contacts') }}" method="GET" class="mb-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" name="query" class="form-control" placeholder="Search by name or number..." 
+                                   value="{{ search_query if search_query else '' }}">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Add Contact Button -->
+                <div class="d-grid gap-2 mb-4">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                        <i class="fas fa-plus me-2"></i>Add New Contact
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="stats-container mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Contact Statistics</h5>
+                            <p><i class="fas fa-users me-2"></i>Total Contacts: <span id="total-contacts">{{ contacts|length }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9 col-md-8 main-content">
+                <div class="contacts-header">
+                    <h2>Your Contacts</h2>
+                    {% if search_query %}
+                    <p class="search-results">Showing results for: "{{ search_query }}"</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-times me-1"></i>Clear Search
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Contacts Grid -->
+                <div class="row contacts-grid">
+                    {% if contacts %}
+                        {% for contact in contacts %}
+                        <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
+                            <div class="card contact-card h-100">
+                                <div class="card-body">
+                                    <div class="contact-avatar">
+                                        <span>{{ contact.name[0]|upper }}</span>
+                                    </div>
+                                    <h5 class="card-title">{{ contact.name }}</h5>
+                                    <div class="contact-info">
+                                        <p><i class="fas fa-phone me-2"></i>{{ contact.prefix }} {{ contact.phone[:5] }} {{ contact.phone[5:] }}</p>
+                                        {% if contact.email %}
+                                        <p><i class="fas fa-envelope me-2"></i>{{ contact.email }}</p>
+                                        {% endif %}
+                                        {% if contact.address %}
+                                        <p><i class="fas fa-map-marker-alt me-2"></i>{{ contact.address }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="contact-actions">
+                                        <button class="btn btn-sm btn-primary edit-contact" 
+                                                data-id="{{ contact._id }}"
+                                                data-name="{{ contact.name }}"
+                                                data-prefix="{{ contact.prefix }}"
+                                                data-phone="{{ contact.phone }}"
+                                                data-email="{{ contact.email }}"
+                                                data-address="{{ contact.address }}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger delete-contact" data-id="{{ contact._id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12 text-center no-contacts">
+                            <i class="fas fa-address-book fa-4x mb-3"></i>
+                            <h3>No contacts found</h3>
+                            <p>Start by adding a new contact using the button on the left.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Contact Modal -->
+    <div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addContactModalLabel">Add New Contact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addContactForm" action="{{ url_for('add_contact') }}" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-4">
+                                <label for="prefix" class="form-label">Prefix</label>
+                                <select class="form-select" id="prefix" name="prefix">
+                                    <option value="">Select</option>
+                                    {% for prefix in prefixes %}
+                                    <option value="{{ prefix }}">{{ prefix }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-8">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                <div class="invalid-feedback" id="phone-error">
+                                    Phone number must be exactly 10 digits.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" id="saveContactBtn">Save Contact</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Contact Modal -->
+    <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editContactModalLabel">Edit Contact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editContactForm">
+                    <input type="hidden" id="edit-id" name="id">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="edit-name" name="name" required>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-4">
+                                <label for="edit-prefix" class="form-label">Prefix</label>
+                                <select class="form-select" id="edit-prefix" name="prefix">
+                                    <option value="">Select</option>
+                                    {% for prefix in prefixes %}
+                                    <option value="{{ prefix }}">{{ prefix }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-8">
+                                <label for="edit-phone" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="edit-phone" name="phone" required>
+                                <div class="invalid-feedback" id="edit-phone-error">
+                                    Phone number must be exactly 10 digits.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="edit-email" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-address" class="form-label">Address</label>
+                            <textarea class="form-control" id="edit-address" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="updateContactBtn">Update Contact</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteContactModal" tabindex="-1" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteContactModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this contact? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
