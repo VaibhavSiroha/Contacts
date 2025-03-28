@@ -74,7 +74,7 @@
                                     </div>
                                     <h5 class="card-title">{{ contact.name }}</h5>
                                     <div class="contact-info">
-                                        <p><i class="fas fa-phone me-2"></i>{{ contact.prefix }} {{ contact.phone[:5] }} {{ contact.phone[5:] }}</p>
+                                        <p><i class="fas fa-phone me-2"></i>{{ contact.prefix if contact.prefix else '' }} {{ contact.phone[:5] }} {{ contact.phone[5:] }}</p>
                                         {% if contact.email %}
                                         <p><i class="fas fa-envelope me-2"></i>{{ contact.email }}</p>
                                         {% endif %}

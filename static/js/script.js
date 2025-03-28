@@ -256,7 +256,7 @@ $(document).ready(function() {
                                             </div>
                                             <h5 class="card-title">${contact.name}</h5>
                                             <div class="contact-info">
-                                                <p><i class="fas fa-phone me-2"></i>${contact.prefix} ${contact.phone.substring(0, 5)} ${contact.phone.substring(5)}</p>
+                                                <p><i class="fas fa-phone me-2"></i>${contact.prefix || ''} ${contact.phone.substring(0, 5)} ${contact.phone.substring(5)}</p>
                                                 ${contact.email ? `<p><i class="fas fa-envelope me-2"></i>${contact.email}</p>` : ''}
                                                 ${contact.address ? `<p><i class="fas fa-map-marker-alt me-2"></i>${contact.address}</p>` : ''}
                                             </div>
@@ -264,7 +264,7 @@ $(document).ready(function() {
                                                 <button class="btn btn-sm btn-primary edit-contact" 
                                                         data-id="${contact._id}"
                                                         data-name="${contact.name}"
-                                                        data-prefix="${contact.prefix}"
+                                                        data-prefix="${contact.prefix || ''}"
                                                         data-phone="${contact.phone}"
                                                         data-email="${contact.email || ''}"
                                                         data-address="${contact.address || ''}">
