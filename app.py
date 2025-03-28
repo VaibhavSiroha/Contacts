@@ -57,7 +57,8 @@ def add_contact():
     
     result = mongo.db.contacts.insert_one(new_contact)
     
-    return redirect(url_for('index'))
+    # Return success response instead of redirecting
+    return jsonify({"success": True, "message": "Contact added successfully"}), 201
 
 @app.route('/contacts/<contact_id>', methods=['PUT'])
 def update_contact(contact_id):

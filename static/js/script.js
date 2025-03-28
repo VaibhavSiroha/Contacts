@@ -239,14 +239,54 @@ $(document).ready(function() {
     
     // Add contact form validation
     $('#addContactForm').on('submit', function(e) {
+        e.preventDefault();
         const phone = $('#phone').val();
         
         // Validate phone number
         if (!phoneRegex.test(phone)) {
-            e.preventDefault();
             $('#phone').addClass('is-invalid');
             $('#phone-error').show();
             return false;
         }
+        
+        // Hide any previous error
+        $('#add-contact-error').hide();
+        
+        // Get form data
+        const name = $('#name').val();
+        const prefix = $('#prefix').val();
+        const email = $('#email').val();
+        const address = $('#address').val();
+        
+        // Create form data object
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('prefix', prefix);
+        formData.append('phone', phone);
+        formData.append('email', email);
+        formData.append('address', address);
+        
+        // Send AJAX request
+        $.ajax({
+            url: '/contacts',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Close modal and reload page to show new contact
+                $('#addContactModal').modal('hide');
+                location.reload();
+            },
+            error: function(xhr) {
+                // Display error message in the modal
+                const error = xhr.responseJSON.error;
+                $('#add-contact-error-message').text(error);
+                $('#add-contact-error').show();
+                
+                // Scroll to the top of the modal to make error visible
+                $('.modal-body').scrollTop(0);
+            }
+        });
     });
 });
