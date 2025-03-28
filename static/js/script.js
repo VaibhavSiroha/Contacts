@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    // Phone number validation
-    const phoneRegex = /^\d{10}$/;
+    // Phone number validation - allow 10 digits or 11 digits with leading 0
+    const phoneRegex = /^(\d{10}|0\d{10})$/;
     let deleteContactId = null;
     let searchTimeout = null;
     
@@ -24,50 +24,34 @@ $(document).ready(function() {
     // Real-time validation for phone number in add form
     $('#phone').on('input', function() {
         const phone = $(this).val().replace(/\D/g, '');
-        
-        // If phone starts with 0, move it to prefix
-        if (phone.startsWith('0') && phone.length > 1) {
-            const currentPrefix = $('#prefix').val();
-            $('#prefix').val('0' + currentPrefix);
-            $(this).val(phone.substring(1)); // Remove the leading 0
-            return; // Exit early as the input will trigger again
-        }
-        
         $(this).val(phone); // Keep only digits
         
-        if (phone.length !== 10) {
-            $(this).addClass('is-invalid');
-            $('#phone-error').text('Phone number must be exactly 10 digits').show();
-            $('#saveContactBtn').prop('disabled', true);
-        } else {
+        // Allow 10 digits or 11 digits with leading 0
+        if (phone.length === 10 || (phone.length === 11 && phone.startsWith('0'))) {
             $(this).removeClass('is-invalid');
             $('#phone-error').hide();
             $('#saveContactBtn').prop('disabled', false);
+        } else {
+            $(this).addClass('is-invalid');
+            $('#phone-error').text('Phone number must be 10 digits or 11 digits starting with 0').show();
+            $('#saveContactBtn').prop('disabled', true);
         }
     });
     
     // Real-time validation for phone number in edit form
     $('#edit-phone').on('input', function() {
         const phone = $(this).val().replace(/\D/g, '');
-        
-        // If phone starts with 0, move it to prefix
-        if (phone.startsWith('0') && phone.length > 1) {
-            const currentPrefix = $('#edit-prefix').val();
-            $('#edit-prefix').val('0' + currentPrefix);
-            $(this).val(phone.substring(1)); // Remove the leading 0
-            return; // Exit early as the input will trigger again
-        }
-        
         $(this).val(phone); // Keep only digits
         
-        if (phone.length !== 10) {
-            $(this).addClass('is-invalid');
-            $('#edit-phone-error').text('Phone number must be exactly 10 digits').show();
-            $('#updateContactBtn').prop('disabled', true);
-        } else {
+        // Allow 10 digits or 11 digits with leading 0
+        if (phone.length === 10 || (phone.length === 11 && phone.startsWith('0'))) {
             $(this).removeClass('is-invalid');
             $('#edit-phone-error').hide();
             $('#updateContactBtn').prop('disabled', false);
+        } else {
+            $(this).addClass('is-invalid');
+            $('#edit-phone-error').text('Phone number must be 10 digits or 11 digits starting with 0').show();
+            $('#updateContactBtn').prop('disabled', true);
         }
     });
     
@@ -115,15 +99,28 @@ $(document).ready(function() {
         
         const id = $('#edit-id').val();
         const name = $('#edit-name').val();
-        const prefix = $('#edit-prefix').val();
-        const phone = $('#edit-phone').val();
+        let prefix = $('#edit-prefix').val();
+        let phone = $('#edit-phone').val();
         const email = $('#edit-email').val();
         const address = $('#edit-address').val();
         
+        // Handle if phone has a leading 0 - move it to prefix only when saving
+        if (phone.startsWith('0') && phone.length === 11) {
+            // Only add 0 to prefix if prefix is empty
+            if (prefix && prefix.trim() !== '') {
+                // If prefix exists, just remove the 0 from phone
+                phone = phone.substring(1);
+            } else {
+                // If no prefix, move 0 to prefix
+                prefix = '0' + prefix;
+                phone = phone.substring(1);
+            }
+        }
+        
         // Validate phone number
-        if (!phoneRegex.test(phone)) {
+        if (!phoneRegex.test(phone) && !phoneRegex.test('0' + phone)) {
             $('#edit-phone').addClass('is-invalid');
-            $('#edit-phone-error').text('Phone number must be exactly 10 digits').show();
+            $('#edit-phone-error').text('Phone number must be 10 digits or 11 digits starting with 0').show();
             return false;
         }
         
@@ -350,23 +347,35 @@ $(document).ready(function() {
     // Add contact form validation
     $('#addContactForm').on('submit', function(e) {
         e.preventDefault();
-        const phone = $('#phone').val();
+        
+        const name = $('#name').val();
+        let prefix = $('#prefix').val();
+        let phone = $('#phone').val();
+        const email = $('#email').val();
+        const address = $('#address').val();
+        
+        // Handle if phone has a leading 0 - move it to prefix only when saving
+        if (phone.startsWith('0') && phone.length === 11) {
+            // Only add 0 to prefix if prefix is empty
+            if (prefix && prefix.trim() !== '') {
+                // If prefix exists, just remove the 0 from phone
+                phone = phone.substring(1);
+            } else {
+                // If no prefix, move 0 to prefix
+                prefix = '0' + prefix;
+                phone = phone.substring(1);
+            }
+        }
         
         // Validate phone number
-        if (!phoneRegex.test(phone)) {
+        if (!phoneRegex.test(phone) && !phoneRegex.test('0' + phone)) {
             $('#phone').addClass('is-invalid');
-            $('#phone-error').text('Phone number must be exactly 10 digits').show();
+            $('#phone-error').text('Phone number must be 10 digits or 11 digits starting with 0').show();
             return false;
         }
         
         // Hide any previous error
         $('#add-contact-error').hide();
-        
-        // Get form data
-        const name = $('#name').val();
-        const prefix = $('#prefix').val();
-        const email = $('#email').val();
-        const address = $('#address').val();
         
         // Create form data object
         const formData = new FormData();

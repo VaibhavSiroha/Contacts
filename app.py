@@ -14,8 +14,8 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/contacts_db")
 mongo = PyMongo(app)
 
-# Phone number validation regex (10 digits only)
-PHONE_REGEX = re.compile(r'^\d{10}$')
+# Phone number validation regex (10 digits or 11 digits with leading 0)
+PHONE_REGEX = re.compile(r'^(\d{10}|0\d{10})$')
 
 # Prefix list
 PREFIXES = ["+91", "+1", "+44", "+61", "+86", "+33", "+49", "+81", "+7", "+55"]
@@ -37,9 +37,20 @@ def add_contact():
     email = request.form.get('email', '').strip()
     address = request.form.get('address', '').strip()
     
+    # Handle phone number with leading 0 - move it to prefix only when saving
+    if phone.startswith('0') and len(phone) == 11:
+        # Only add 0 to prefix if prefix is empty
+        if prefix and prefix.strip() != '':
+            # If prefix exists, just remove the 0 from phone
+            phone = phone[1:]
+        else:
+            # If no prefix, move 0 to prefix
+            prefix = '0' + prefix
+            phone = phone[1:]
+    
     # Validate phone number
-    if not PHONE_REGEX.match(phone):
-        return jsonify({"error": "Phone number must be exactly 10 digits"}), 400
+    if not PHONE_REGEX.match(phone) and not PHONE_REGEX.match('0' + phone):
+        return jsonify({"error": "Phone number must be 10 digits or 11 digits starting with 0"}), 400
     
     # Check for duplicate contacts based on phone number only (regardless of prefix)
     existing_contact = mongo.db.contacts.find_one({"phone": phone})
@@ -70,9 +81,20 @@ def update_contact(contact_id):
     email = request.form.get('email', '').strip()
     address = request.form.get('address', '').strip()
     
+    # Handle phone number with leading 0 - move it to prefix only when saving
+    if phone.startswith('0') and len(phone) == 11:
+        # Only add 0 to prefix if prefix is empty
+        if prefix and prefix.strip() != '':
+            # If prefix exists, just remove the 0 from phone
+            phone = phone[1:]
+        else:
+            # If no prefix, move 0 to prefix
+            prefix = '0' + prefix
+            phone = phone[1:]
+    
     # Validate phone number
-    if not PHONE_REGEX.match(phone):
-        return jsonify({"error": "Phone number must be exactly 10 digits"}), 400
+    if not PHONE_REGEX.match(phone) and not PHONE_REGEX.match('0' + phone):
+        return jsonify({"error": "Phone number must be 10 digits or 11 digits starting with 0"}), 400
     
     # Check for duplicate contacts based on phone number only (excluding the current one)
     existing_contact = mongo.db.contacts.find_one(

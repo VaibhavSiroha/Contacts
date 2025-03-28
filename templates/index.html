@@ -132,17 +132,57 @@
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
-                        <div class="mb-3 row">
-                            <div class="col-4">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
                                 <label for="prefix" class="form-label">Prefix</label>
                                 <select class="form-select" id="prefix" name="prefix">
                                     <option value="">Select</option>
                                     {% for prefix in prefixes %}
-                                    <option value="{{ prefix }}">{{ prefix }}</option>
+                                    <option value="{{ prefix }}">{{ prefix }} {% if prefix == "+1" %}(US/Canada)
+                                    {% elif prefix == "+7" %}(Russia)
+                                    {% elif prefix == "+20" %}(Egypt)
+                                    {% elif prefix == "+27" %}(South Africa)
+                                    {% elif prefix == "+30" %}(Greece)
+                                    {% elif prefix == "+31" %}(Netherlands)
+                                    {% elif prefix == "+32" %}(Belgium)
+                                    {% elif prefix == "+33" %}(France)
+                                    {% elif prefix == "+34" %}(Spain)
+                                    {% elif prefix == "+36" %}(Hungary)
+                                    {% elif prefix == "+39" %}(Italy)
+                                    {% elif prefix == "+40" %}(Romania)
+                                    {% elif prefix == "+41" %}(Switzerland)
+                                    {% elif prefix == "+43" %}(Austria)
+                                    {% elif prefix == "+44" %}(UK)
+                                    {% elif prefix == "+45" %}(Denmark)
+                                    {% elif prefix == "+46" %}(Sweden)
+                                    {% elif prefix == "+47" %}(Norway)
+                                    {% elif prefix == "+48" %}(Poland)
+                                    {% elif prefix == "+49" %}(Germany)
+                                    {% elif prefix == "+52" %}(Mexico)
+                                    {% elif prefix == "+55" %}(Brazil)
+                                    {% elif prefix == "+61" %}(Australia)
+                                    {% elif prefix == "+63" %}(Philippines)
+                                    {% elif prefix == "+64" %}(New Zealand)
+                                    {% elif prefix == "+65" %}(Singapore)
+                                    {% elif prefix == "+66" %}(Thailand)
+                                    {% elif prefix == "+81" %}(Japan)
+                                    {% elif prefix == "+82" %}(South Korea)
+                                    {% elif prefix == "+86" %}(China)
+                                    {% elif prefix == "+90" %}(Turkey)
+                                    {% elif prefix == "+91" %}(India)
+                                    {% elif prefix == "+92" %}(Pakistan)
+                                    {% elif prefix == "+94" %}(Sri Lanka)
+                                    {% elif prefix == "+971" %}(UAE)
+                                    {% elif prefix == "+972" %}(Israel)
+                                    {% elif prefix == "+966" %}(Saudi Arabia)
+                                    {% elif prefix == "+852" %}(Hong Kong)
+                                    {% elif prefix == "+880" %}(Bangladesh)
+                                    {% elif prefix == "+977" %}(Nepal)
+                                    {% endif %}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-8">
+                            <div class="col-md-8 mb-3">
                                 <label for="phone" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="phone" name="phone" required>
                                 <div class="invalid-feedback" id="phone-error">
@@ -183,17 +223,57 @@
                             <label for="edit-name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="edit-name" name="name" required>
                         </div>
-                        <div class="mb-3 row">
-                            <div class="col-4">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
                                 <label for="edit-prefix" class="form-label">Prefix</label>
                                 <select class="form-select" id="edit-prefix" name="prefix">
                                     <option value="">Select</option>
                                     {% for prefix in prefixes %}
-                                    <option value="{{ prefix }}">{{ prefix }}</option>
+                                    <option value="{{ prefix }}">{{ prefix }} {% if prefix == "+1" %}(US/Canada)
+                                    {% elif prefix == "+7" %}(Russia)
+                                    {% elif prefix == "+20" %}(Egypt)
+                                    {% elif prefix == "+27" %}(South Africa)
+                                    {% elif prefix == "+30" %}(Greece)
+                                    {% elif prefix == "+31" %}(Netherlands)
+                                    {% elif prefix == "+32" %}(Belgium)
+                                    {% elif prefix == "+33" %}(France)
+                                    {% elif prefix == "+34" %}(Spain)
+                                    {% elif prefix == "+36" %}(Hungary)
+                                    {% elif prefix == "+39" %}(Italy)
+                                    {% elif prefix == "+40" %}(Romania)
+                                    {% elif prefix == "+41" %}(Switzerland)
+                                    {% elif prefix == "+43" %}(Austria)
+                                    {% elif prefix == "+44" %}(UK)
+                                    {% elif prefix == "+45" %}(Denmark)
+                                    {% elif prefix == "+46" %}(Sweden)
+                                    {% elif prefix == "+47" %}(Norway)
+                                    {% elif prefix == "+48" %}(Poland)
+                                    {% elif prefix == "+49" %}(Germany)
+                                    {% elif prefix == "+52" %}(Mexico)
+                                    {% elif prefix == "+55" %}(Brazil)
+                                    {% elif prefix == "+61" %}(Australia)
+                                    {% elif prefix == "+63" %}(Philippines)
+                                    {% elif prefix == "+64" %}(New Zealand)
+                                    {% elif prefix == "+65" %}(Singapore)
+                                    {% elif prefix == "+66" %}(Thailand)
+                                    {% elif prefix == "+81" %}(Japan)
+                                    {% elif prefix == "+82" %}(South Korea)
+                                    {% elif prefix == "+86" %}(China)
+                                    {% elif prefix == "+90" %}(Turkey)
+                                    {% elif prefix == "+91" %}(India)
+                                    {% elif prefix == "+92" %}(Pakistan)
+                                    {% elif prefix == "+94" %}(Sri Lanka)
+                                    {% elif prefix == "+971" %}(UAE)
+                                    {% elif prefix == "+972" %}(Israel)
+                                    {% elif prefix == "+966" %}(Saudi Arabia)
+                                    {% elif prefix == "+852" %}(Hong Kong)
+                                    {% elif prefix == "+880" %}(Bangladesh)
+                                    {% elif prefix == "+977" %}(Nepal)
+                                    {% endif %}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-8">
+                            <div class="col-md-8 mb-3">
                                 <label for="edit-phone" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="edit-phone" name="phone" required>
                                 <div class="invalid-feedback" id="edit-phone-error">
