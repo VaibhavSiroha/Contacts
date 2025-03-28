@@ -41,8 +41,9 @@ def add_contact():
     if not PHONE_REGEX.match(phone):
         return jsonify({"error": "Phone number must be exactly 10 digits"}), 400
     
-    # Check for duplicate contacts
-    existing_contact = mongo.db.contacts.find_one({"prefix": prefix, "phone": phone})
+    # Check for duplicate contacts based on phone number only (regardless of prefix)
+    existing_contact = mongo.db.contacts.find_one({"phone": phone})
+    
     if existing_contact:
         return jsonify({"error": "A contact with this phone number already exists"}), 400
     
@@ -73,10 +74,11 @@ def update_contact(contact_id):
     if not PHONE_REGEX.match(phone):
         return jsonify({"error": "Phone number must be exactly 10 digits"}), 400
     
-    # Check for duplicate contacts (excluding the current one)
+    # Check for duplicate contacts based on phone number only (excluding the current one)
     existing_contact = mongo.db.contacts.find_one(
-        {"prefix": prefix, "phone": phone, "_id": {"$ne": ObjectId(contact_id)}}
+        {"phone": phone, "_id": {"$ne": ObjectId(contact_id)}}
     )
+    
     if existing_contact:
         return jsonify({"error": "A contact with this phone number already exists"}), 400
     
@@ -130,6 +132,32 @@ def api_get_contacts():
     contacts = list(mongo.db.contacts.find())
     for contact in contacts:
         contact['_id'] = str(contact['_id'])
+    return jsonify(contacts)
+
+@app.route('/api/search', methods=['GET'])
+def api_search_contacts():
+    """API endpoint to search contacts by name or phone number"""
+    query = request.args.get('query', '').strip()
+    
+    if not query:
+        # Return all contacts if no query
+        contacts = list(mongo.db.contacts.find())
+    else:
+        # Create a regex pattern for case-insensitive search
+        pattern = re.compile(f'.*{re.escape(query)}.*', re.IGNORECASE)
+        
+        # Search by name or phone number
+        contacts = list(mongo.db.contacts.find({
+            "$or": [
+                {"name": pattern},
+                {"phone": pattern}
+            ]
+        }))
+    
+    # Convert ObjectId to string for JSON serialization
+    for contact in contacts:
+        contact['_id'] = str(contact['_id'])
+    
     return jsonify(contacts)
 
 if __name__ == '__main__':

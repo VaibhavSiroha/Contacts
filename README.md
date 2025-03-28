@@ -52,10 +52,10 @@ A professional contact management system with advanced search functionality and 
 
 ```json
 {
-  "name": "John Doe",
+  "name": "Bhuka Bhediya",
   "prefix": "+91",
-  "phone": "9876543210",
-  "email": "john.doe@example.com",
-  "address": "123 Street, City, Country"
+  "phone": "6969696969",
+  "email": "bhukabhediya69@gmail.com",
+  "address": "Bihar, Bihar, mars"
 }
 ```
