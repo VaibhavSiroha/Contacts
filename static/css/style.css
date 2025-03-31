@@ -8,29 +8,69 @@
     --border-radius: 8px;
     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
+    
+    /* Light theme (default) */
+    --bg-color: #f5f7fb;
+    --sidebar-bg: white;
+    --card-bg: white;
+    --text-color: #333;
+    --sidebar-border: #eee;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --input-bg: white;
+    --input-text: #333;
+    --input-border: #ddd;
+    --input-focus-shadow: rgba(74, 111, 220, 0.25);
+    --modal-header-bg: var(--primary-color);
+    --modal-header-text: white;
+    --icon-color: var(--primary-color);
+    --muted-text: #6c757d;
+    --form-label: #333;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --bg-color: #1a1d21;
+    --sidebar-bg: #252a30;
+    --card-bg: #2c3137;
+    --text-color: #e1e1e1;
+    --sidebar-border: #3a3f45;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    --input-bg: #3a3f45;
+    --input-text: #e1e1e1;
+    --input-border: #4a4f55;
+    --input-focus-shadow: rgba(74, 111, 220, 0.5);
+    --modal-header-bg: #3a5fc8;
+    --modal-header-text: white;
+    --icon-color: #6a8fe0;
+    --muted-text: #b0b0b0;
+    --form-label: #e1e1e1;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fb;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Sidebar Styles */
 .sidebar {
-    background-color: white;
+    background-color: var(--sidebar-bg);
     height: 100vh;
     position: sticky;
     top: 0;
     padding: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 100;
+    transition: background-color 0.3s ease;
 }
 
 .sidebar-header {
     padding: 20px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--sidebar-border);
     margin-bottom: 20px;
 }
 
@@ -47,13 +87,14 @@ body {
 .stats-container .card {
     border-radius: var(--border-radius);
     border: none;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--card-shadow);
 }
 
 /* Main Content Styles */
 .main-content {
     padding: 30px;
-    background-color: #f5f7fb;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
 }
 
 .contacts-header {
@@ -72,7 +113,7 @@ body {
 
 .search-results {
     font-style: italic;
-    color: var(--secondary-color);
+    color: var(--muted-text);
     margin-right: 10px;
     margin-bottom: 0;
 }
@@ -81,14 +122,15 @@ body {
 .contact-card {
     border-radius: var(--border-radius);
     border: none;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--card-shadow);
     transition: var(--transition);
     overflow: hidden;
+    background-color: var(--card-bg);
 }
 
 .contact-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--hover-shadow);
 }
 
 .contact-avatar {
@@ -108,7 +150,7 @@ body {
 .contact-card .card-title {
     font-weight: 600;
     margin-bottom: 15px;
-    color: var(--dark-color);
+    color: var(--text-color);
 }
 
 .contact-info {
@@ -123,7 +165,7 @@ body {
 
 .contact-info i {
     width: 20px;
-    color: var(--primary-color);
+    color: var(--icon-color);
 }
 
 .contact-actions {
@@ -135,7 +177,7 @@ body {
 /* No Contacts Placeholder */
 .no-contacts {
     padding: 50px 0;
-    color: var(--secondary-color);
+    color: var(--muted-text);
 }
 
 .no-contacts i {
@@ -146,11 +188,13 @@ body {
 .modal-content {
     border-radius: var(--border-radius);
     border: none;
+    background-color: var(--card-bg);
+    color: var(--text-color);
 }
 
 .modal-header {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--modal-header-bg);
+    color: var(--modal-header-text);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
 }
@@ -163,12 +207,41 @@ body {
 .form-control, .form-select {
     border-radius: var(--border-radius);
     padding: 10px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-text);
 }
 
 .form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 0.2rem rgba(74, 111, 220, 0.25);
+    box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
     border-color: var(--primary-color);
+}
+
+.form-label {
+    color: var(--form-label);
+}
+
+/* Fix for Bootstrap form controls in dark mode */
+[data-theme="dark"] .form-control::placeholder,
+[data-theme="dark"] .form-select {
+    color: rgba(225, 225, 225, 0.7);
+}
+
+[data-theme="dark"] .form-select option {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+}
+
+/* Fix for modal close button in dark mode */
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Fix for alerts in dark mode */
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #f8d7da;
+    border-color: rgba(220, 53, 69, 0.3);
 }
 
 /* Button Styles */
@@ -259,4 +332,72 @@ body {
     color: var(--danger-color);
     font-size: 0.875rem;
     margin-top: 0.25rem;
+}
+
+/* Theme Switch Styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.theme-switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+    margin-left: auto;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.theme-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.sun-icon {
+    color: #f39c12;
+}
+
+.moon-icon {
+    color: #9b59b6;
 }

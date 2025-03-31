@@ -4,6 +4,26 @@ $(document).ready(function() {
     let deleteContactId = null;
     let searchTimeout = null;
     
+    // Theme switching functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Check if user previously selected a theme
+    if(localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.checked = true;
+    }
+    
+    // Listen for toggle changes
+    themeToggle.addEventListener('change', function(e) {
+        if(e.target.checked) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+    
     // Format phone number based on prefix
     function formatPhoneNumber(prefix, phone) {
         if (!phone) return '';
