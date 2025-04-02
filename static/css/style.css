@@ -8,7 +8,7 @@
     --border-radius: 8px;
     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
-    
+
     /* Light theme (default) */
     --bg-color: #f5f7fb;
     --sidebar-bg: white;
@@ -33,7 +33,7 @@
     --bg-color: #1a1d21;
     --sidebar-bg: #252a30;
     --card-bg: #2c3137;
-    --text-color: #e1e1e1;
+    --text-color: #e1e1e1; /* Main light text color for dark theme */
     --sidebar-border: #3a3f45;
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     --hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
@@ -44,8 +44,90 @@
     --modal-header-bg: #3a5fc8;
     --modal-header-text: white;
     --icon-color: #6a8fe0;
-    --muted-text: #b0b0b0;
+    --muted-text: #b0b0b0; /* Lighter muted text for dark theme */
     --form-label: #e1e1e1;
+
+    /* --- START: Dark Theme Text Visibility Fixes --- */
+
+    /* Ensure general text elements inherit the light color */
+    body, p, div, span, li {
+        color: var(--text-color);
+    }
+
+    /* Ensure headings have the correct color */
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        color: var(--text-color);
+    }
+
+     /* Override default dark color for main content header if needed */
+    .contacts-header h2 {
+        color: var(--text-color);
+    }
+
+    /* Ensure card text is light */
+    .card, .card-body, .card-title, .card-text {
+        color: var(--text-color);
+    }
+
+    /* Ensure contact info text is light */
+    .contact-info p {
+        color: var(--text-color);
+    }
+     .contact-info i {
+         color: var(--icon-color);
+     }
+
+    /* Make sure muted text is also light enough */
+    .text-muted, .search-results {
+        color: var(--muted-text) !important; /* Use !important if Bootstrap overrides are strong */
+    }
+
+    /* Ensure placeholder text is visible */
+    .form-control::placeholder {
+        color: rgba(225, 225, 225, 0.7);
+    }
+    .form-select {
+         color: rgba(225, 225, 225, 0.7); /* Ensure select placeholder text is visible too */
+    }
+    .form-select option { /* Ensure dropdown options have correct colors */
+        background-color: var(--input-bg);
+        color: var(--input-text);
+    }
+
+     /* Check modal text */
+     .modal-body {
+          color: var(--text-color);
+     }
+     .modal-footer {
+         border-top: 1px solid var(--sidebar-border); /* Adjust border color */
+     }
+
+     /* Check statistics text */
+     .stats-container .card-body, .stats-container .card-title {
+         color: var(--text-color);
+     }
+
+      /* Check 'No contacts' text */
+     .no-contacts, .no-contacts h3, .no-contacts p {
+          color: var(--muted-text);
+      }
+      .no-contacts i {
+           color: #4a4f55; /* Darker grey icon for dark theme */
+      }
+
+    /* Fix for modal close button */
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Fix for alerts */
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #f8d7da;
+        border-color: rgba(220, 53, 69, 0.3);
+    }
+
+    /* --- END: Dark Theme Text Visibility Fixes --- */
 }
 
 body {
@@ -66,6 +148,7 @@ body {
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 100;
     transition: background-color 0.3s ease;
+    border-right: 1px solid var(--sidebar-border); /* Add subtle border */
 }
 
 .sidebar-header {
@@ -88,6 +171,7 @@ body {
     border-radius: var(--border-radius);
     border: none;
     box-shadow: var(--card-shadow);
+    background-color: var(--card-bg); /* Ensure stats card bg is correct */
 }
 
 /* Main Content Styles */
@@ -107,16 +191,11 @@ body {
 
 .contacts-header h2 {
     margin-right: auto;
-    color: var(--dark-color);
+    /* color removed here, handled by theme */
     font-weight: 600;
 }
 
-.search-results {
-    font-style: italic;
-    color: var(--muted-text);
-    margin-right: 10px;
-    margin-bottom: 0;
-}
+/* Search results text style moved to theme-specific rules */
 
 /* Contact Card Styles */
 .contact-card {
@@ -150,7 +229,7 @@ body {
 .contact-card .card-title {
     font-weight: 600;
     margin-bottom: 15px;
-    color: var(--text-color);
+    /* color removed here, handled by theme */
 }
 
 .contact-info {
@@ -161,10 +240,12 @@ body {
     margin-bottom: 8px;
     display: flex;
     align-items: center;
+    /* color removed here, handled by theme */
 }
 
 .contact-info i {
     width: 20px;
+    margin-right: 10px; /* Added margin for spacing */
     color: var(--icon-color);
 }
 
@@ -172,24 +253,41 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    padding-top: 15px; /* Add padding above actions */
+    border-top: 1px solid var(--sidebar-border); /* Use sidebar border color for consistency */
+    margin-top: 15px; /* Add margin above border */
 }
+
 
 /* No Contacts Placeholder */
 .no-contacts {
     padding: 50px 0;
-    color: var(--muted-text);
+    text-align: center; /* Center align content */
+    /* color removed here, handled by theme */
 }
 
 .no-contacts i {
-    color: #ddd;
+    font-size: 3rem; /* Make icon larger */
+    margin-bottom: 15px;
+    display: block; /* Make icon block level */
+    /* color handled by theme */
 }
+.no-contacts h3 {
+    font-weight: 600;
+    margin-bottom: 5px;
+    /* color handled by theme */
+}
+.no-contacts p {
+    /* color handled by theme */
+}
+
 
 /* Modal Styles */
 .modal-content {
     border-radius: var(--border-radius);
     border: none;
     background-color: var(--card-bg);
-    color: var(--text-color);
+    /* color handled by theme */
 }
 
 .modal-header {
@@ -197,11 +295,10 @@ body {
     color: var(--modal-header-text);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
+    border-bottom: none; /* Remove default bottom border */
 }
 
-.modal-footer {
-    border-top: 1px solid #eee;
-}
+/* modal-footer border handled by theme */
 
 /* Form Styles */
 .form-control, .form-select {
@@ -210,39 +307,22 @@ body {
     border: 1px solid var(--input-border);
     background-color: var(--input-bg);
     color: var(--input-text);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; /* Add transition */
 }
 
 .form-control:focus, .form-select:focus {
     box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
     border-color: var(--primary-color);
+    background-color: var(--input-bg); /* Ensure focus background remains correct */
+    color: var(--input-text); /* Ensure focus text remains correct */
 }
 
 .form-label {
     color: var(--form-label);
+    margin-bottom: 0.5rem; /* Ensure space below label */
 }
 
-/* Fix for Bootstrap form controls in dark mode */
-[data-theme="dark"] .form-control::placeholder,
-[data-theme="dark"] .form-select {
-    color: rgba(225, 225, 225, 0.7);
-}
-
-[data-theme="dark"] .form-select option {
-    background-color: var(--input-bg);
-    color: var(--input-text);
-}
-
-/* Fix for modal close button in dark mode */
-[data-theme="dark"] .btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%);
-}
-
-/* Fix for alerts in dark mode */
-[data-theme="dark"] .alert-danger {
-    background-color: rgba(220, 53, 69, 0.2);
-    color: #f8d7da;
-    border-color: rgba(220, 53, 69, 0.3);
-}
+/* Placeholder and select option colors handled by theme */
 
 /* Button Styles */
 .btn {
@@ -287,8 +367,10 @@ body {
     .sidebar {
         height: auto;
         position: relative;
+        border-right: none; /* Remove border in stacked view */
+        border-bottom: 1px solid var(--sidebar-border); /* Add bottom border instead */
     }
-    
+
     .contacts-grid {
         margin-top: 20px;
     }
@@ -300,35 +382,46 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.contact-card {
+/* Apply animation selectively if desired, e.g., via JS */
+/*.contact-card {
     animation: fadeIn 0.5s ease-out;
-}
+}*/
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px; /* For horizontal scrollbars */
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--bg-color); /* Match background */
 }
 
 ::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 4px;
 }
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+     background: #555; /* Darker thumb for dark theme */
+}
 
 ::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+     background: #777;
 }
 
 /* Validation styles */
 .is-invalid {
     border-color: var(--danger-color) !important;
 }
+.is-invalid:focus { /* Ensure focus shadow on invalid fields uses danger color */
+     box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb), .25);
+}
 
 .invalid-feedback {
-    display: none;
+    /* display handled by Bootstrap JS */
     color: var(--danger-color);
     font-size: 0.875rem;
     margin-top: 0.25rem;
@@ -400,4 +493,14 @@ input:checked + .slider:before {
 
 .moon-icon {
     color: #9b59b6;
+}
+
+/* Search Highlight */
+.highlight {
+    background-color: rgba(74, 111, 220, 0.3); /* Semi-transparent primary color */
+    border-radius: 3px;
+    padding: 0 2px;
+}
+[data-theme="dark"] .highlight {
+    background-color: rgba(106, 143, 224, 0.4); /* Slightly lighter highlight for dark theme */
 }
